@@ -30,66 +30,86 @@
         <java.version>21</java.version>
     </properties>
     <dependencies>
+        <!-- Робота з базою даних SQL за допомогою JPA/Hibernate -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
+
+        <!-- Безпека та авторизація (Spring Security) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+
+        <!-- Валідація вхідних даних (наприклад, @NotBlank, @Min) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+
+        <!-- Головний стартер для створення Веб-додатків та REST API -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webmvc</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Автоматичний перезапуск сервера при зміні коду -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+
+        <!-- Драйвер для підключення до бази даних PostgreSQL -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- Бібліотека Lombok (геттери, сеттери без шаблону) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- JJWT API для створення та читання JWT-токенів.-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.12.5</version>
+        </dependency>
+
+        <!--Реалізація JJWT, необхідна під час запуску програми.-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--Інтеграція з Jackson, яку JJWT використовує для роботи з JSON.-->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.12.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Головний універсальний стартер для тестування Spring Boot додатка -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa-test</artifactId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Додатковий стартер для тестування захищених Spring Security методів -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -99,6 +119,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -115,6 +143,8 @@
                                 <path>
                                     <groupId>org.projectlombok</groupId>
                                     <artifactId>lombok</artifactId>
+                                    <!-- ВИПРАВЛЕНО: Явно вказуємо версію, яку беремо зі Spring Boot Parent -->
+                                    <version>${lombok.version}</version>
                                 </path>
                             </annotationProcessorPaths>
                         </configuration>
@@ -130,6 +160,8 @@
                                 <path>
                                     <groupId>org.projectlombok</groupId>
                                     <artifactId>lombok</artifactId>
+                                    <!--  версія для тестової компіляції -->
+                                    <version>${lombok.version}</version>
                                 </path>
                             </annotationProcessorPaths>
                         </configuration>
