@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
 public class SecurityConfig {
 
@@ -41,13 +40,10 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider() {
 
         DaoAuthenticationProvider authProvider =
-                new DaoAuthenticationProvider();
-
-        // EN: Use our database-backed user details service.
-        authProvider.setUserDetailsService(userDetailsService);
+                new DaoAuthenticationProvider(userDetailsService);
 
         // EN: Use BCrypt to verify stored password hashes.
-       authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;
     }
@@ -89,14 +85,14 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
 
                         // EN: Require authentication for all other endpoints.
-                       .anyRequest().authenticated()
+                        .anyRequest().authenticated()
                 )
 
                 // EN: Register our custom authentication provider
                 .authenticationProvider(authenticationProvider())
 
                 // EN: Execute JWT authentication before Spring's username/password filter.
-                                .addFilterBefore(
+                .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 );
