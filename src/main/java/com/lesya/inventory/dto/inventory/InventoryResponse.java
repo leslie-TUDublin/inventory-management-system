@@ -11,10 +11,10 @@ public class InventoryResponse {
 
     private String productCode;
     private String productName;
-    private Integer quantity;
+    private int quantity;
 
     // EN: Threshold used to detect low stock.
-    private Integer minimumStockLevel;
+    private int minimumStockLevel;
 
     // EN: Low Stock - Indicates whether the current quantity is below the threshold.
     private boolean lowStock;

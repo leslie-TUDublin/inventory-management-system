@@ -23,9 +23,9 @@ public class Inventory {
     private Product product;
 
     @Column(nullable = false)
-    private Integer quantity = 0;
+    private int quantity = 0;
 
     // EN: threshold used to identify low stock.
     @Column(nullable = false)
-    private Integer minimumStockLevel = 0;
+    private int minimumStockLevel = 0;
 }

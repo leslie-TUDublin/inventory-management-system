@@ -13,5 +13,5 @@ public class InventoryUpdateRequest {
 
     @NotNull(message = "Minimum stock level is required")
     @Min(value = 0, message = "Minimum stock level must not be negative")
-    private Integer minimumStockLevel;
+    private int minimumStockLevel;
 }
