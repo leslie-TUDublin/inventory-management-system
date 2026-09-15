@@ -11,6 +11,7 @@ import com.lesya.inventory.exception.ResourceNotFoundException;
 import com.lesya.inventory.repository.CategoryRepository;
 import com.lesya.inventory.repository.InventoryRepository;
 import com.lesya.inventory.repository.ProductRepository;
+import com.lesya.inventory.repository.StockMovementRepository;
 import com.lesya.inventory.repository.SupplierRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,20 +26,22 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final SupplierRepository supplierRepository;
     private final InventoryRepository inventoryRepository;
+    private final StockMovementRepository stockMovementRepository;
 
 
     public ProductService(
             ProductRepository productRepository,
             CategoryRepository categoryRepository,
             SupplierRepository supplierRepository,
-            InventoryRepository inventoryRepository
+            InventoryRepository inventoryRepository,
+            StockMovementRepository stockMovementRepository
     ) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.supplierRepository = supplierRepository;
         this.inventoryRepository = inventoryRepository;
+        this.stockMovementRepository = stockMovementRepository;
     }
-
 
 
     // Return all products with pagination.
@@ -136,7 +139,7 @@ public class ProductService {
     }
 
 
-    // Update product information without changing  public product code.
+    // Update product information without changing its public product code.
     @Transactional
     public ProductResponse updateProduct(
             String productCode,
@@ -198,7 +201,7 @@ public class ProductService {
     }
 
 
-    // Delete product via its public business identifier.
+    // Delete product ONLY when it has no dependent inventory or movement history.
     @Transactional
     public void deleteProduct(String productCode) {
 
@@ -209,6 +212,14 @@ public class ProductService {
                                 "Product not found with code: " + productCode
                         )
                 );
+
+        // Check stock movement history
+        if (stockMovementRepository.existsByProductId(product.getId())) {
+
+            throw new IllegalStateException(
+                    "Product cannot be deleted because stock movement history exists"
+            );
+        }
 
         // Find inventory
         Inventory inventory = inventoryRepository
@@ -225,7 +236,7 @@ public class ProductService {
     }
 
 
-    // Map entity to response DTO (convert the Product entity into the API response DTO).
+    // Map the Product entity into the API response DTO.
     private ProductResponse mapToResponse(Product product) {
 
         return new ProductResponse(
